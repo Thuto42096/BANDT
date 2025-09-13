@@ -52,6 +52,21 @@ class POSHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(result).encode())
 
+    def do_DELETE(self):
+        path = urlparse(self.path).path
+        
+        if path.startswith('/api/inventory/'):
+            item_id = path.split('/')[-1]
+            result = self.delete_inventory(item_id)
+        else:
+            result = {"error": "Not found"}
+        
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(json.dumps(result).encode())
+
     def get_inventory(self):
         conn = sqlite3.connect('pos_system.db')
         c = conn.cursor()
@@ -143,6 +158,14 @@ class POSHandler(BaseHTTPRequestHandler):
         
         conn.close()
         return sales
+
+    def delete_inventory(self, item_id):
+        conn = sqlite3.connect('pos_system.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM inventory WHERE id = ?", (item_id,))
+        conn.commit()
+        conn.close()
+        return {"message": "Item deleted successfully"}
 
 if __name__ == '__main__':
     # Initialize database

@@ -25,6 +25,18 @@ function Inventory({ inventory, onUpdate }) {
     }
   };
 
+  const handleDeleteItem = async (itemId) => {
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      try {
+        await axios.delete(`${API_BASE}/inventory/${itemId}`);
+        setMessage('Item deleted successfully');
+        onUpdate();
+      } catch (error) {
+        setMessage('Failed to delete item');
+      }
+    }
+  };
+
   return (
     <div className="inventory-container">
       <h2>Inventory Management</h2>
@@ -69,6 +81,7 @@ function Inventory({ inventory, onUpdate }) {
               <th>Price</th>
               <th>Quantity</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -79,6 +92,14 @@ function Inventory({ inventory, onUpdate }) {
                 <td>{item.quantity}</td>
                 <td className={item.quantity < 5 ? 'low-stock' : 'in-stock'}>
                   {item.quantity < 5 ? 'Low Stock' : 'In Stock'}
+                </td>
+                <td>
+                  <button 
+                    className="delete-btn"
+                    onClick={() => handleDeleteItem(item.id)}
+                  >
+                    🗑️ Delete
+                  </button>
                 </td>
               </tr>
             ))}
