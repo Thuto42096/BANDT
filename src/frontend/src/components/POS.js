@@ -7,6 +7,7 @@ function POS({ inventory, onSale }) {
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [cart, setCart] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [amountReceived, setAmountReceived] = useState('');
   const [message, setMessage] = useState('');
@@ -31,19 +32,22 @@ function POS({ inventory, onSale }) {
 
   const categorizeInventory = () => {
     const categories = {
-      'Food & Drinks': ['Bread', 'Milk', 'Coca Cola', 'Chips', 'Sweets'],
-      'Airtime & Data': ['Airtime R10', 'Airtime R20', 'Airtime R50', 'Data'],
-      'Cigarettes': ['Cigarettes', 'Tobacco'],
-      'Household': ['Soap', 'Detergent', 'Candles'],
+      'Food & Drinks': ['bread', 'milk', 'coca', 'cola', 'chips', 'sweets', 'chicken', 'meat', 'fish', 'rice', 'maize', 'sugar', 'tea', 'coffee', 'juice', 'water', 'biscuits', 'cake'],
+      'Airtime & Data': ['airtime', 'data', 'voucher', 'recharge', 'top up', 'credit'],
+      'Cigarettes': ['cigarettes', 'tobacco', 'smoke', 'lighter'],
+      'Household': ['soap', 'detergent', 'candles', 'matches', 'toilet paper', 'cleaning', 'washing powder'],
       'Other': []
     };
     
     const categorized = {};
     
     Object.keys(categories).forEach(category => {
-      categorized[category] = inventory.filter(item => 
-        categories[category].some(catItem => item.name.includes(catItem))
-      );
+      categorized[category] = inventory.filter(item => {
+        const itemName = item.name.toLowerCase();
+        return categories[category].some(keyword => 
+          itemName.includes(keyword.toLowerCase())
+        );
+      });
     });
     
     // Add uncategorized items to 'Other'
@@ -58,7 +62,33 @@ function POS({ inventory, onSale }) {
   const categories = categorizeInventory();
 
   const calculateTotal = () => {
-    return getSelectedItemPrice() * quantity;
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  const addToCart = () => {
+    if (!selectedItem) return;
+    
+    const existingItem = cart.find(item => item.id === selectedItem.id);
+    if (existingItem) {
+      setCart(cart.map(item => 
+        item.id === selectedItem.id 
+          ? {...item, quantity: item.quantity + quantity}
+          : item
+      ));
+    } else {
+      setCart([...cart, {...selectedItem, quantity}]);
+    }
+    
+    setSelectedItem(null);
+    setQuantity(1);
+  };
+
+  const removeFromCart = (itemId) => {
+    setCart(cart.filter(item => item.id !== itemId));
+  };
+
+  const clearCart = () => {
+    setCart([]);
   };
 
   const calculateChange = () => {
@@ -79,21 +109,30 @@ function POS({ inventory, onSale }) {
       }
     }
     
+    if (cart.length === 0) {
+      setMessage('Cart is empty');
+      return;
+    }
+    
     try {
-      const response = await axios.post(`${API_BASE}/sell`, {
-        item_name: selectedItem.name,
-        quantity: parseInt(quantity),
-        payment_method: paymentMethod,
-        amount_received: paymentMethod === 'cash' ? parseFloat(amountReceived) : calculateTotal(),
-        change: paymentMethod === 'cash' ? calculateChange() : 0
-      });
-      
-      if (paymentMethod === 'cash' && calculateChange() > 0) {
-        setMessage(`${response.data.message} - Change: R${calculateChange().toFixed(2)}`);
-      } else {
-        setMessage(response.data.message);
+      // Process each item in cart
+      for (const item of cart) {
+        await axios.post(`${API_BASE}/sell`, {
+          item_name: item.name,
+          quantity: item.quantity,
+          payment_method: paymentMethod,
+          amount_received: paymentMethod === 'cash' ? parseFloat(amountReceived) : calculateTotal(),
+          change: paymentMethod === 'cash' ? calculateChange() : 0
+        });
       }
       
+      if (paymentMethod === 'cash' && calculateChange() > 0) {
+        setMessage(`Sale completed - Change: R${calculateChange().toFixed(2)}`);
+      } else {
+        setMessage('Sale completed successfully');
+      }
+      
+      clearCart();
       setSelectedItem(null);
       setSelectedCategory('');
       setQuantity(1);
@@ -197,24 +236,68 @@ function POS({ inventory, onSale }) {
           )}
         </div>
         
+        {/* Shopping Cart */}
+        <div className="cart-section">
+          <h3>Shopping Cart ({cart.length} items)</h3>
+          {cart.length > 0 ? (
+            <div className="cart-items">
+              {cart.map(item => (
+                <div key={item.id} className="cart-item">
+                  <span className="cart-item-name">{item.name}</span>
+                  <span className="cart-item-details">{item.quantity} x R{item.price}</span>
+                  <span className="cart-item-total">R{(item.quantity * item.price).toFixed(2)}</span>
+                  <button 
+                    type="button" 
+                    className="remove-cart-btn"
+                    onClick={() => removeFromCart(item.id)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <div className="cart-total">
+                <strong>Total: R{calculateTotal().toFixed(2)}</strong>
+              </div>
+            </div>
+          ) : (
+            <p className="empty-cart">Cart is empty</p>
+          )}
+        </div>
+        
         {selectedItem && (
-          <form onSubmit={handleSale} className="pos-form">
+          <div className="add-to-cart-section">
             <div className="selected-item-info">
               <h3>Selected: {selectedItem.name}</h3>
               <p>Price: R{selectedItem.price} | Stock: {selectedItem.quantity}</p>
             </div>
-
+            
             <div className="form-group">
               <label>Quantity:</label>
               <input 
                 type="number" 
                 value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
                 min="1"
                 max={selectedItem.quantity}
                 required
               />
             </div>
+            
+            <button 
+              type="button" 
+              className="add-to-cart-btn"
+              onClick={addToCart}
+              disabled={quantity > selectedItem.quantity}
+            >
+              Add to Cart
+            </button>
+          </div>
+        )}
+        
+        {cart.length > 0 && (
+          <form onSubmit={handleSale} className="pos-form">
+
+
 
             <div className="form-group">
               <label>Payment Method:</label>
@@ -262,6 +345,14 @@ function POS({ inventory, onSale }) {
               disabled={paymentMethod === 'cash' && calculateChange() < 0}
             >
               Process Sale
+            </button>
+            
+            <button 
+              type="button" 
+              className="clear-cart-btn"
+              onClick={clearCart}
+            >
+              Clear Cart
             </button>
           </form>
         )}

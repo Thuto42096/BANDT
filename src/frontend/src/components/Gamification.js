@@ -229,26 +229,37 @@ function Gamification({ creditScore, salesHistory }) {
         <div className="leaderboard-card">
           <h3>Township Leaderboard</h3>
           <div className="leaderboard-list">
-            <div className="leaderboard-item current-user">
-              <span className="rank">🥇</span>
-              <span className="name">Your Shop</span>
-              <span className="score">{creditScore?.score || 0}</span>
-            </div>
-            <div className="leaderboard-item">
-              <span className="rank">🥈</span>
-              <span className="name">Thabo's Spaza</span>
-              <span className="score">78</span>
-            </div>
-            <div className="leaderboard-item">
-              <span className="rank">🥉</span>
-              <span className="name">Nomsa's Store</span>
-              <span className="score">65</span>
-            </div>
-            <div className="leaderboard-item">
-              <span className="rank">4</span>
-              <span className="name">Lucky's Shop</span>
-              <span className="score">52</span>
-            </div>
+            {(() => {
+              const userScore = creditScore?.score || 0;
+              const competitors = [
+                { name: "Thabo's Spaza", score: 78 },
+                { name: "Nomsa's Store", score: 65 },
+                { name: "Lucky's Shop", score: 52 },
+                { name: "Sipho's Corner", score: 45 },
+                { name: "Mama's Shop", score: 38 }
+              ];
+              
+              const allShops = [
+                { name: "Your Shop", score: userScore, isUser: true },
+                ...competitors
+              ].sort((a, b) => b.score - a.score);
+              
+              const getRankEmoji = (index) => {
+                if (index === 0) return "🥇";
+                if (index === 1) return "🥈";
+                if (index === 2) return "🥉";
+                return (index + 1).toString();
+              };
+              
+              return allShops.slice(0, 6).map((shop, index) => (
+                <div key={shop.name} className={`leaderboard-item ${shop.isUser ? 'current-user' : ''}`}>
+                  <span className="rank">{getRankEmoji(index)}</span>
+                  <span className="name">{shop.name}</span>
+                  <span className="score">{shop.score}</span>
+                </div>
+              ));
+            })()
+}
           </div>
         </div>
 

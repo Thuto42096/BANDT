@@ -9,7 +9,7 @@ class POSHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
@@ -41,6 +41,8 @@ class POSHandler(BaseHTTPRequestHandler):
         
         if path == '/api/inventory':
             result = self.add_inventory(data)
+        elif path == '/api/inventory/refill':
+            result = self.refill_inventory(data)
         elif path == '/api/sell':
             result = self.process_sale(data)
         else:
@@ -162,10 +164,62 @@ class POSHandler(BaseHTTPRequestHandler):
     def delete_inventory(self, item_id):
         conn = sqlite3.connect('pos_system.db')
         c = conn.cursor()
+        
+        # Check if item exists
+        c.execute("SELECT * FROM inventory WHERE id = ?", (item_id,))
+        if not c.fetchone():
+            conn.close()
+            return {"error": "Item not found"}
+        
+        # Delete the item
         c.execute("DELETE FROM inventory WHERE id = ?", (item_id,))
+        rows_affected = c.rowcount
         conn.commit()
         conn.close()
-        return {"message": "Item deleted successfully"}
+        
+        if rows_affected > 0:
+            return {"message": "Item deleted successfully"}
+        else:
+            return {"error": "Failed to delete item"}
+
+    def refill_inventory(self, data):
+        conn = sqlite3.connect('pos_system.db')
+        c = conn.cursor()
+        
+        print(f"DEBUG: Refill request for item_id: {data['item_id']}, quantity: {data['quantity']}")
+        
+        # Check if item exists first
+        c.execute("SELECT name, quantity FROM inventory WHERE id = ?", (data['item_id'],))
+        result = c.fetchone()
+        
+        print(f"DEBUG: Database result: {result}")
+        
+        if not result:
+            conn.close()
+            return {"error": "Item not found"}
+        
+        item_name, current_quantity = result
+        new_quantity = current_quantity + data['quantity']
+        
+        print(f"DEBUG: Current: {current_quantity}, Adding: {data['quantity']}, New: {new_quantity}")
+        
+        # Update quantity by adding to existing stock
+        c.execute("UPDATE inventory SET quantity = ? WHERE id = ?",
+                 (new_quantity, data['item_id']))
+        
+        rows_affected = c.rowcount
+        print(f"DEBUG: Rows affected: {rows_affected}")
+        
+        conn.commit()
+        
+        # Verify the update
+        c.execute("SELECT quantity FROM inventory WHERE id = ?", (data['item_id'],))
+        final_quantity = c.fetchone()[0]
+        print(f"DEBUG: Final quantity in DB: {final_quantity}")
+        
+        conn.close()
+        
+        return {"message": f"Added {data['quantity']} {item_name} to stock. New total: {new_quantity}"}
 
 if __name__ == '__main__':
     # Initialize database

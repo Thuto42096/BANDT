@@ -37,6 +37,26 @@ function Inventory({ inventory, onUpdate }) {
     }
   };
 
+  const handleRefillItem = async (itemId) => {
+    const quantity = prompt('How many items to add to stock?');
+    if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
+      try {
+        const response = await axios.post(`${API_BASE}/inventory/refill`, {
+          item_id: itemId,
+          quantity: parseInt(quantity)
+        });
+        setMessage(response.data.message || `Added ${quantity} items to stock`);
+        // Force refresh by calling onUpdate multiple times
+        setTimeout(() => {
+          onUpdate();
+          setTimeout(() => onUpdate(), 100);
+        }, 100);
+      } catch (error) {
+        setMessage('Failed to refill item');
+      }
+    }
+  };
+
   return (
     <div className="inventory-container">
       <h2>Inventory Management</h2>
@@ -94,6 +114,12 @@ function Inventory({ inventory, onUpdate }) {
                   {item.quantity < 5 ? 'Low Stock' : 'In Stock'}
                 </td>
                 <td>
+                  <button 
+                    className="refill-btn"
+                    onClick={() => handleRefillItem(item.id)}
+                  >
+                    📦 Refill
+                  </button>
                   <button 
                     className="delete-btn"
                     onClick={() => handleDeleteItem(item.id)}

@@ -312,6 +312,132 @@
   color: #424242;
 }
 
+/* Shopping Cart Styles */
+.cart-section {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #dee2e6;
+}
+
+.cart-section h3 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.cart-items {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item-name {
+  font-weight: bold;
+  flex: 2;
+}
+
+.cart-item-details {
+  color: #666;
+  flex: 1;
+  text-align: center;
+}
+
+.cart-item-total {
+  font-weight: bold;
+  color: #28a745;
+  flex: 1;
+  text-align: right;
+}
+
+.remove-cart-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+.remove-cart-btn:hover {
+  background: #c82333;
+}
+
+.cart-total {
+  padding: 10px 0;
+  border-top: 2px solid #dee2e6;
+  margin-top: 10px;
+  text-align: right;
+  font-size: 18px;
+  color: #2c3e50;
+}
+
+.empty-cart {
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.add-to-cart-section {
+  background: #e3f2fd;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #2196f3;
+}
+
+.add-to-cart-btn {
+  background: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.add-to-cart-btn:hover {
+  background: #0056b3;
+}
+
+.add-to-cart-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.clear-cart-btn {
+  background: #6c757d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.clear-cart-btn:hover {
+  background: #545b62;
+}
+
 .pos-form {
   max-width: 400px;
   margin-bottom: 20px;
@@ -455,6 +581,21 @@
 
 .in-stock {
   color: #28a745;
+}
+
+.refill-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.refill-btn:hover {
+  background: #218838;
 }
 
 .delete-btn {
