@@ -6,6 +6,46 @@ const API_BASE = 'http://localhost:5001/api';
 function Inventory({ inventory, onUpdate }) {
   const [newItem, setNewItem] = useState({ name: '', price: '', quantity: '' });
   const [message, setMessage] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const categorizeInventory = () => {
+    const categories = {
+      'Food & Drinks': ['bread', 'milk', 'coca', 'cola', 'chips', 'sweets', 'chicken', 'meat', 'fish', 'rice', 'maize', 'sugar', 'tea', 'coffee', 'juice', 'water', 'biscuits', 'cake'],
+      'Airtime & Data': ['airtime', 'data', 'voucher', 'recharge', 'top up', 'credit'],
+      'Cigarettes': ['cigarettes', 'tobacco', 'smoke', 'lighter'],
+      'Household': ['soap', 'detergent', 'candles', 'matches', 'toilet paper', 'cleaning', 'washing powder'],
+      'Other': []
+    };
+    
+    const categorized = { 'All': inventory };
+    
+    Object.keys(categories).forEach(category => {
+      categorized[category] = inventory.filter(item => {
+        const itemName = item.name.toLowerCase();
+        return categories[category].some(keyword => 
+          itemName.includes(keyword.toLowerCase())
+        );
+      });
+    });
+    
+    // Add uncategorized items to 'Other'
+    const categorizedItems = Object.values(categorized).flat().filter(item => item);
+    const uniqueCategorizedIds = new Set();
+    Object.keys(categories).forEach(cat => {
+      if (cat !== 'Other') {
+        categorized[cat].forEach(item => uniqueCategorizedIds.add(item.id));
+      }
+    });
+    
+    categorized['Other'] = inventory.filter(item => 
+      !uniqueCategorizedIds.has(item.id)
+    );
+    
+    return categorized;
+  };
+
+  const categorizedInventory = categorizeInventory();
+  const displayedItems = categorizedInventory[selectedCategory] || [];
 
   const handleAddItem = async (e) => {
     e.preventDefault();
@@ -57,6 +97,25 @@ function Inventory({ inventory, onUpdate }) {
     }
   };
 
+  const handleUpdatePrice = async (itemId, currentPrice) => {
+    const newPrice = prompt(`Enter new price (current: R${currentPrice}):`);
+    if (newPrice && !isNaN(newPrice) && parseFloat(newPrice) > 0) {
+      try {
+        const response = await axios.post(`${API_BASE}/inventory/update-price`, {
+          item_id: itemId,
+          price: parseFloat(newPrice)
+        });
+        setMessage(response.data.message || `Updated price to R${newPrice}`);
+        setTimeout(() => {
+          onUpdate();
+          setTimeout(() => onUpdate(), 100);
+        }, 100);
+      } catch (error) {
+        setMessage('Failed to update price');
+      }
+    }
+  };
+
   return (
     <div className="inventory-container">
       <h2>Inventory Management</h2>
@@ -93,7 +152,23 @@ function Inventory({ inventory, onUpdate }) {
       {message && <div className="message">{message}</div>}
 
       <div className="inventory-list">
-        <h3>Current Inventory</h3>
+        <div className="inventory-header">
+          <h3>Current Inventory</h3>
+          <div className="category-filter">
+            <label>Filter by Category:</label>
+            <select 
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              {Object.keys(categorizedInventory).map(category => (
+                <option key={category} value={category}>
+                  {category} ({categorizedInventory[category].length})
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
         <table>
           <thead>
             <tr>
@@ -105,7 +180,7 @@ function Inventory({ inventory, onUpdate }) {
             </tr>
           </thead>
           <tbody>
-            {inventory.map(item => (
+            {displayedItems.map(item => (
               <tr key={item.id}>
                 <td>{item.name}</td>
                 <td>R{item.price}</td>
@@ -121,6 +196,12 @@ function Inventory({ inventory, onUpdate }) {
                     📦 Refill
                   </button>
                   <button 
+                    className="update-price-btn"
+                    onClick={() => handleUpdatePrice(item.id, item.price)}
+                  >
+                    💰 Price
+                  </button>
+                  <button 
                     className="delete-btn"
                     onClick={() => handleDeleteItem(item.id)}
                   >
@@ -129,6 +210,13 @@ function Inventory({ inventory, onUpdate }) {
                 </td>
               </tr>
             ))}
+            {displayedItems.length === 0 && (
+              <tr>
+                <td colSpan="5" className="no-items">
+                  No items in {selectedCategory} category
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

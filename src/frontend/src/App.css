@@ -438,6 +438,45 @@
   background: #545b62;
 }
 
+/* Inventory Category Filter */
+.inventory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.inventory-header h3 {
+  margin: 0;
+}
+
+.category-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-filter label {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.category-filter select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.no-items {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+}
+
 .pos-form {
   max-width: 400px;
   margin-bottom: 20px;
@@ -596,6 +635,21 @@
 
 .refill-btn:hover {
   background: #218838;
+}
+
+.update-price-btn {
+  background: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.update-price-btn:hover {
+  background: #e0a800;
 }
 
 .delete-btn {

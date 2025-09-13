@@ -45,6 +45,9 @@ function Dashboard({ creditScore }) {
     return acc;
   }, []);
 
+  console.log('Sales History:', salesHistory.length, 'items');
+  console.log('Payment Method Data:', paymentMethodData);
+
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
   if (!creditScore) {
@@ -69,6 +72,8 @@ function Dashboard({ creditScore }) {
             <p>Total Sales: R{creditScore.total_sales?.toFixed(2) || 0}</p>
             <p>Transactions: {creditScore.transaction_count || 0}</p>
             <p>Avg Transaction: R{creditScore.avg_transaction?.toFixed(2) || 0}</p>
+            <p>Digital Adoption: {creditScore.digital_adoption?.toFixed(1) || 0}%</p>
+            <p>Active Days: {creditScore.active_days || 0}/30</p>
           </div>
         </div>
 
@@ -83,24 +88,28 @@ function Dashboard({ creditScore }) {
 
         <div className="chart-container">
           <h3>Payment Methods</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie
-                data={paymentMethodData}
-                cx="50%"
-                cy="50%"
-                outerRadius={60}
-                fill="#8884d8"
-                dataKey="value"
-                label
-              >
-                {paymentMethodData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+          {paymentMethodData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={200}>
+              <PieChart>
+                <Pie
+                  data={paymentMethodData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={60}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label
+                >
+                  {paymentMethodData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <p>No payment data available</p>
+          )}
         </div>
 
         <div className="recent-sales">

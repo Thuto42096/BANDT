@@ -43,6 +43,8 @@ class POSHandler(BaseHTTPRequestHandler):
             result = self.add_inventory(data)
         elif path == '/api/inventory/refill':
             result = self.refill_inventory(data)
+        elif path == '/api/inventory/update-price':
+            result = self.update_price(data)
         elif path == '/api/sell':
             result = self.process_sale(data)
         else:
@@ -126,15 +128,44 @@ class POSHandler(BaseHTTPRequestHandler):
         result = c.fetchone()
         total_sales, transaction_count = result[0] or 0, result[1] or 0
         
+        # Calculate digital payment adoption
+        c.execute("SELECT COUNT(*) FROM sales WHERE payment_method != 'cash'")
+        digital_count = c.fetchone()[0]
+        digital_adoption = (digital_count / transaction_count * 100) if transaction_count else 0
+        
+        # Calculate consistency (sales in last 30 days)
+        c.execute("SELECT COUNT(DISTINCT date(timestamp)) FROM sales WHERE date(timestamp) >= date('now', '-30 days')")
+        active_days = c.fetchone()[0]
+        consistency = min(active_days / 30 * 100, 100)
+        
         avg_transaction = total_sales / transaction_count if transaction_count else 0
-        score = min(int(total_sales/10 + avg_transaction/2 + transaction_count*5), 100)
+        
+        # More challenging scoring algorithm
+        # Sales Volume (25%) - requires R5000+ for full points
+        sales_score = min(total_sales / 5000 * 25, 25)
+        
+        # Transaction Frequency (25%) - requires 100+ transactions for full points  
+        frequency_score = min(transaction_count / 100 * 25, 25)
+        
+        # Average Transaction (20%) - requires R50+ avg for full points
+        avg_score = min(avg_transaction / 50 * 20, 20)
+        
+        # Digital Adoption (15%) - requires 50%+ digital payments
+        digital_score = min(digital_adoption / 50 * 15, 15)
+        
+        # Business Consistency (15%) - requires 20+ active days per month
+        consistency_score = min(active_days / 20 * 15, 15)
+        
+        final_score = int(sales_score + frequency_score + avg_score + digital_score + consistency_score)
         
         conn.close()
         return {
-            "score": score,
+            "score": final_score,
             "total_sales": total_sales,
             "transaction_count": transaction_count,
-            "avg_transaction": avg_transaction
+            "avg_transaction": avg_transaction,
+            "digital_adoption": digital_adoption,
+            "active_days": active_days
         }
 
     def get_sales_history(self):
@@ -220,6 +251,29 @@ class POSHandler(BaseHTTPRequestHandler):
         conn.close()
         
         return {"message": f"Added {data['quantity']} {item_name} to stock. New total: {new_quantity}"}
+
+    def update_price(self, data):
+        conn = sqlite3.connect('pos_system.db')
+        c = conn.cursor()
+        
+        # Check if item exists first
+        c.execute("SELECT name FROM inventory WHERE id = ?", (data['item_id'],))
+        result = c.fetchone()
+        
+        if not result:
+            conn.close()
+            return {"error": "Item not found"}
+        
+        item_name = result[0]
+        
+        # Update price
+        c.execute("UPDATE inventory SET price = ? WHERE id = ?",
+                 (data['price'], data['item_id']))
+        
+        conn.commit()
+        conn.close()
+        
+        return {"message": f"Updated {item_name} price to R{data['price']}"}
 
 if __name__ == '__main__':
     # Initialize database
