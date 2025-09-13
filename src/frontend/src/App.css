@@ -1,0 +1,781 @@
+.App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.app-header {
+  background: #2c3e50;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.app-header h1 {
+  margin: 0 0 15px 0;
+}
+
+.app-header nav button {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 10px 15px;
+  margin-right: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.app-header nav button:hover,
+.app-header nav button.active {
+  background: white;
+  color: #2c3e50;
+}
+
+.pos-container, .inventory-container, .dashboard-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.pos-layout {
+  display: flex;
+  gap: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.pos-main {
+  flex: 2;
+  min-height: 600px;
+}
+
+.missions-sidebar {
+  flex: 1;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  max-width: 300px;
+}
+
+.missions-sidebar h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.missions-mini {
+  margin-bottom: 20px;
+}
+
+.mission-mini {
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  margin-bottom: 10px;
+}
+
+.mission-mini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.mission-mini-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.mission-complete-mini {
+  font-size: 12px;
+}
+
+.mission-mini-desc {
+  color: #666;
+  font-size: 12px;
+  margin: 5px 0 8px 0;
+}
+
+.mission-mini-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.progress-bar-mini {
+  flex: 1;
+  height: 4px;
+  background: #e9ecef;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill-mini {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff, #0056b3);
+  transition: width 0.3s ease;
+}
+
+.progress-text-mini {
+  font-size: 11px;
+  color: #666;
+  min-width: 50px;
+}
+
+.mission-reward-mini {
+  background: #ffc107;
+  color: #212529;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.daily-stats {
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.daily-stats h4 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 12px;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-item span:first-child {
+  color: #666;
+}
+
+.stat-item span:last-child {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Category-based POS Interface */
+.pos-interface {
+  margin-bottom: 20px;
+}
+
+.categories-section {
+  margin-bottom: 20px;
+}
+
+.categories-section h3 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.category-btn {
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  padding: 15px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  font-weight: bold;
+  color: #495057;
+}
+
+.category-btn:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.category-btn.active {
+  background: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.item-count {
+  display: block;
+  font-size: 12px;
+  font-weight: normal;
+  margin-top: 5px;
+  opacity: 0.8;
+}
+
+.items-section {
+  margin-bottom: 20px;
+}
+
+.items-section h3 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.item-btn {
+  background: white;
+  border: 2px solid #dee2e6;
+  padding: 12px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.item-btn:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0,123,255,0.1);
+}
+
+.item-btn.selected {
+  background: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.item-btn:disabled {
+  background: #f8f9fa;
+  border-color: #dee2e6;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.item-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.item-price {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.item-btn.selected .item-price {
+  color: #fff;
+}
+
+.item-stock {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.selected-item-info {
+  background: #e3f2fd;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #2196f3;
+}
+
+.selected-item-info h3 {
+  margin: 0 0 5px 0;
+  color: #1976d2;
+}
+
+.selected-item-info p {
+  margin: 0;
+  color: #424242;
+}
+
+.pos-form {
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.sale-btn {
+  background: #27ae60;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.sale-btn:hover {
+  background: #219a52;
+}
+
+.sale-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.transaction-summary {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  margin: 15px 0;
+  border: 1px solid #e9ecef;
+}
+
+.total-display {
+  font-size: 18px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.change-display {
+  margin-top: 10px;
+  padding: 10px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #155724;
+}
+
+.insufficient-payment {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.message {
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.message.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.add-item-form {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-row button {
+  background: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.inventory-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.inventory-list th, .inventory-list td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.inventory-list th {
+  background: #f8f9fa;
+  font-weight: bold;
+}
+
+.low-stock {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.in-stock {
+  color: #28a745;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.credit-score-card, .loan-eligibility-card, .chart-container, .recent-sales {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.score-display {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.score-number {
+  font-size: 48px;
+  font-weight: bold;
+  display: block;
+}
+
+.score-rating {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.score-details p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.loan-info {
+  text-align: center;
+}
+
+.loan-amount {
+  font-size: 24px;
+  font-weight: bold;
+  color: #28a745;
+  margin: 10px 0;
+}
+
+.loan-rate {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.apply-loan-btn {
+  background: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.apply-loan-btn:hover {
+  background: #218838;
+}
+
+.sales-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.sale-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.payment-method {
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #495057;
+}
+
+.change-display.negative {
+  background: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+/* Gamification Styles */
+.gamification-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.avatar-card, .garden-card, .missions-card, .badges-card, .leaderboard-card, .tips-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.avatar-display {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar-emoji {
+  font-size: 48px;
+  text-align: center;
+}
+
+.avatar-info {
+  flex: 1;
+}
+
+.xp-bar {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 5px 0;
+}
+
+.xp-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  transition: width 0.3s ease;
+}
+
+.next-level {
+  font-size: 12px;
+  color: #666;
+  margin: 5px 0 0 0;
+}
+
+.garden-display {
+  text-align: center;
+}
+
+.garden-emoji {
+  font-size: 36px;
+  margin: 10px 0;
+}
+
+.garden-status {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.missions-list {
+  space-y: 15px;
+}
+
+.mission-item {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  margin-bottom: 10px;
+}
+
+.mission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.mission-title {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.mission-reward {
+  background: #ffc107;
+  color: #212529;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.mission-description {
+  color: #666;
+  font-size: 14px;
+  margin: 5px 0 10px 0;
+}
+
+.mission-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #e9ecef;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff, #0056b3);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #666;
+  min-width: 40px;
+}
+
+.mission-complete {
+  color: #28a745;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.badge-icon {
+  font-size: 24px;
+}
+
+.badge-name {
+  font-weight: bold;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.badge-description {
+  font-size: 12px;
+  color: #666;
+  margin: 2px 0 0 0;
+}
+
+.no-badges {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.leaderboard-list {
+  space-y: 10px;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  margin-bottom: 8px;
+}
+
+.leaderboard-item.current-user {
+  background: #e3f2fd;
+  border-color: #2196f3;
+  font-weight: bold;
+}
+
+.rank {
+  font-size: 18px;
+  min-width: 30px;
+}
+
+.name {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.score {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.tips-list {
+  list-style: none;
+  padding: 0;
+}
+
+.tips-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  color: #555;
+}
+
+.tips-list li:last-child {
+  border-bottom: none;
+}
