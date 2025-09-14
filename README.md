@@ -20,6 +20,10 @@ Welcome to the official **Hackathon Submission Template** for the **South Africa
 │   └── README.md
 ├── src/
 │   └── README.md
+├── mobile-app/                     # React Native POS app
+│   └── README.md
+├── android-pos-app/                # Native Android POS app
+│   └── README.md
 ├── vendor/
 │   └── README.md
 ├── .dockerignore
