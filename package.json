@@ -1,0 +1,17 @@
+{
+  "name": "township-pos-system",
+  "version": "1.0.0",
+  "description": "Township POS System with Credit Scoring and Gamification",
+  "scripts": {
+    "build": "cd src/frontend && npm install && npm run build",
+    "dev": "cd src/frontend && npm start",
+    "vercel-build": "cd src/frontend && npm install && npm run build"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
