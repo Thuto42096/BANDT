@@ -12,8 +12,8 @@
 ## 👥 Members
 | Name     | Role                | Institution           | Discord Handle | Email |
 |----------|---------------------|-----------------------| -------------------|-------------|
-| **Blessing**   | Backend Developer   | Wethinkcode | name1 | <email1@gmail.com> |
-| **Thuto**   | Frontend Developer  | Wethinkcode | name2 | <email2@gmail.com> |
+| **Blessing**   | Backend Developer   | Wethinkcode | iamblessing9832 | <sihlek56@gmail.com> |
+| **Thuto**   | Frontend Developer  | Wethinkcode | thuto_r. | <thuto42096@gmail.com> |
 
 ## 🏫 Institution
 ``` c
@@ -25,3 +25,5 @@
 ## 📧 Other Contact Info
 - GitHub Repo: <https://github.com/user-name/repo-name>
 - Other Info (if available): LinkedIn, Website, etc.
+- LinkedIn: linkedin.com/in/siphesihle-khumalo-a92b26228
+- 

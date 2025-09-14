@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PayFast Simple Test</title>
+</head>
+<body>
+    <h2>PayFast Payment Test</h2>
+    <form action="https://sandbox.payfast.co.za/eng/process" method="post">
+        <input type="hidden" name="merchant_id" value="31742791">
+        <input type="hidden" name="merchant_key" value="uqaeapgutmsua">
+        <input type="hidden" name="amount" value="10.00">
+        <input type="hidden" name="item_name" value="Test Item">
+        <input type="hidden" name="return_url" value="https://www.payfast.co.za">
+        <input type="hidden" name="cancel_url" value="https://www.payfast.co.za">
+        <input type="hidden" name="notify_url" value="https://www.payfast.co.za">
+        <input type="hidden" name="signature" value="eaf05b2158ac41348203ce80cfc8a865">
+        
+        <input type="submit" value="Test PayFast Payment" style="padding: 10px 20px; font-size: 16px;">
+    </form>
+    
+    <h3>Test Instructions:</h3>
+    <ol>
+        <li>Click the button above</li>
+        <li>If you get error 400, the credentials are wrong</li>
+        <li>If you see PayFast payment page, credentials are correct</li>
+        <li>Use test card: 4000000000000002</li>
+    </ol>
+</body>
+</html>

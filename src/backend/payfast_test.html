@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PayFast Test</title>
+</head>
+<body>
+    <h2>PayFast Payment Test</h2>
+    <form action="https://www.payfast.co.za/eng/process" method="post">
+        <input type="hidden" name="merchant_id" value="31742791">
+        <input type="hidden" name="merchant_key" value="uqaeapgutmsua">
+        <input type="hidden" name="amount" value="10.00">
+        <input type="hidden" name="item_name" value="Test Item">
+        <input type="hidden" name="return_url" value="http://localhost:3000/success">
+        <input type="hidden" name="cancel_url" value="http://localhost:3000/cancel">
+        <input type="hidden" name="notify_url" value="http://localhost:5001/notify">
+        <input type="hidden" name="signature" value="eaf05b2158ac41348203ce80cfc8a865">
+
+        <input type="submit" value="Pay with PayFast">
+    </form>
+    
+    <h3>Debug Info:</h3>
+    <pre>
+merchant_id: 31742791
+merchant_key: uqaeapgutmsua
+amount: 10.00
+item_name: Test Item
+return_url: http://localhost:3000/success
+cancel_url: http://localhost:3000/cancel
+notify_url: http://localhost:5001/notify
+signature: eaf05b2158ac41348203ce80cfc8a865
+
+    </pre>
+</body>
+</html>
